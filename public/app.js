@@ -1,8 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-import { getFirestore, collection, doc, addDoc, deleteDoc, getDocs } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+import { getFirestore, collection, doc, addDoc, deleteDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
 const firebaseConfig = {
-
 };
 
 // Initialize Firebase
@@ -24,11 +23,7 @@ let selectedTag = ''; // Default to empty, meaning "no tag"
 
 // Function to update tag display
 const updateTagDisplay = (tag) => {
-    if (tag === '') {
-        tagDisplay.className = 'selected-tag no-tag'; // Show "no tag" style
-    } else {
-        tagDisplay.className = `selected-tag ${tag}`; // Apply selected tag color
-    }
+    tagDisplay.className = tag === '' ? 'selected-tag no-tag' : `selected-tag ${tag}`;
 };
 
 // Set up event listeners for tag buttons
@@ -36,7 +31,7 @@ tagButtons.forEach(button => {
     button.addEventListener('click', () => {
         const clickedTag = button.getAttribute('data-tag');
 
-        // If the same tag is clicked again, reset to no tag
+        // Toggle tag selection
         if (selectedTag === clickedTag) {
             selectedTag = ''; // Reset to no tag
             tagButtons.forEach(btn => btn.classList.remove('selected')); // Remove selection from all buttons
@@ -49,8 +44,8 @@ tagButtons.forEach(button => {
         // Update the tag display based on the selected tag
         updateTagDisplay(selectedTag);
 
-        // Enable or disable the "Add Reminder" button
-        document.querySelector("#add-reminder");
+        // Fetch and display the filtered data
+        fetchAndDisplayData();
     });
 });
 
@@ -75,7 +70,7 @@ const showData = (thelist) => {
             <div class="card" data-id="${doc.id}">
                 <div class="card-body ${borderClass}">
                     <h5 class="card-title">${doc.title}</h5>
-                    <h6 class="card-date">${formattedDate}</h6>
+                    <h class="card-date">${formattedDate}</h>
                     <p class="card-text">${doc.description}</p>
                     <button class="btn btn-danger delete" data-id="${doc.id}">Delete</button>
                 </div>
@@ -96,7 +91,14 @@ const showData = (thelist) => {
 
 // Get Collection Data, sort by date, and show it
 const fetchAndDisplayData = () => {
-    getDocs(colRef)
+    let q = query(colRef);
+
+    // Apply the tag filter if a tag is selected
+    if (selectedTag !== '') {
+        q = query(q, where("tag", "==", selectedTag));
+    }
+
+    getDocs(q)
         .then((snapshot) => {
             let thelist = [];
             snapshot.docs.forEach((doc) => {
@@ -122,22 +124,26 @@ form.addEventListener("submit", (e) => {
     e.preventDefault();
 
     // Get input values
-    const title = inputTitle.value;
-    const description = inputDescription.value;
+    const title = inputTitle.value.trim();
+    const description = inputDescription.value.trim();
     const currentDate = new Date();
     const date = currentDate.toISOString(); // Use ISO 8601 format
+
+    // Check if title and description are not empty
+    if (title === '' || description === '') {
+        alert("Title and Description cannot be empty.");
+        return;
+    }
 
     // Add document to Firestore collection
     addDoc(colRef, { tag: selectedTag, title, description, date })
         .then(() => {
             console.log("Document added successfully");
             // Clear input fields
-            inputTitle.value = "";
-            inputDescription.value = "";
+            form.reset();
             selectedTag = ''; // Reset selected tag
             tagButtons.forEach(btn => btn.classList.remove('selected')); // Clear button selection
             updateTagDisplay(''); // Reset tag display
-            document.querySelector("#add-reminder")
             fetchAndDisplayData(); // Fetch and display data after adding
         })
         .catch((err) => {
@@ -157,5 +163,19 @@ const deleteDocument = async (id) => {
     }
 };
 
+// Function to auto-resize textareas
+const autoResize = (textarea) => {
+    textarea.style.height = 'auto'; // Reset the height to auto
+    textarea.style.height = textarea.scrollHeight + 'px'; // Set height to scrollHeight
+};
+
+// Attach input event listeners to the textarea to auto-resize
+const descriptionTextarea = document.getElementById('description');
+descriptionTextarea.addEventListener('input', () => autoResize(descriptionTextarea));
+
 // Fetch and display data on page load
 fetchAndDisplayData();
+
+particlesJS.load('particles-js', 'particles.json', function () {
+    console.log('callback - particles.js config loaded');
+});

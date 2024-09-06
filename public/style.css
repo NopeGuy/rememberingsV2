@@ -1,6 +1,6 @@
 /* General Styles */
 body {
-    background-color: #0f0f0f;
+    background-color: #010513;
     color: #e0e0e0;
     font-family: Arial, sans-serif;
     margin: 0;
@@ -8,11 +8,11 @@ body {
 }
 
 .title {
-    border:rgb(255, 255, 255) 2px solid;
+    border:rgba(255, 255, 255, 0.219) 2px solid;
     border-radius: 5px;
     padding: 10px;
     margin: 10px;
-    background-color: #353535;
+    background-color: #b8b8b825;
     text-align: center;
     /* change font style */
     font-family: 'Courier New', Courier, monospace;
@@ -27,7 +27,7 @@ body {
     max-width: 800px;
     margin: 20px auto;
     padding: 20px;
-    background-color: #161616;
+    background-color: #0d0a2e8a;
     border-radius: 8px;
 }
 
@@ -45,26 +45,104 @@ form {
 
 input[type="text"] {
     width: 100%;
-    max-width: 400px;
+    max-width: 1000px;
     padding: 10px;
     margin: 5px 0;
     border: 1px solid #333;
     border-radius: 4px;
-    background-color: #333;
+    background-color: #3333332a;
     color: #e0e0e0;
 }
 
-input[type="title"] {
+input[type="text"]:focus {
+    outline: none;
+    border-color: #ffffff;
+}
+
+textarea {
+    color: white;
+    background-color: #3333332a;
     width: 100%;
-    max-width: 400px;
-    height: 20%;
-    max-height: 200px;
     padding: 10px;
-    margin: 5px 0;
-    border: 1px solid #333;
+    font-size: 16px;
     border-radius: 4px;
-    background-color: #333;
-    color: #e0e0e0;
+    box-sizing: border-box;
+    border: 1px solid #333;
+    resize: vertical;
+    min-height: 40px;
+    font-family: Arial, sans-serif;resize: none;
+    overflow: hidden;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: #ffffff;
+}
+
+.tag-button {
+    padding: 10px;
+    margin: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.tag-red {
+    background-color: rgb(236, 69, 69);
+}
+
+.tag-yellow {
+    background-color: rgb(235, 235, 84);
+}
+
+.tag-green {
+    background-color: rgb(81, 179, 81);
+}
+
+.tag-blue {
+    background-color: rgb(100, 100, 196);
+}
+
+.selected-tag {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 10px;
+    background-color: rgb(43, 43, 43);
+}
+
+.selected-tag.red {
+    background-color: rgb(236, 69, 69);
+}
+
+.selected-tag.blue {
+    background-color: rgb(100, 100, 196);
+}
+
+.selected-tag.green {
+    background-color: rgb(81, 179, 81);
+}
+
+.selected-tag.yellow {
+    background-color: rgb(235, 235, 84);
+}
+
+.selected-tag.no-tag {
+    background-color: rgb(43, 43, 43);
+    /* default no-tag background */
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    height: 40px;
+}
+
+input:focus {
+    outline: none;
+    border-color: #ffffff;
 }
 
 button {
@@ -119,41 +197,62 @@ button:disabled {
 }
 
 /* Add white border for selected tags */
-.selected {
-    border: 3px solid #ffffff;
-}
 
 /* Default tag when no tag is selected */
 .selected-tag.no-tag {
-    background-color: rgb(43, 43, 43);
+    background-color: rgba(54, 52, 68, 0.788);
     /* Neutral background */
-    border: 2px solid rgb(0, 0, 0);
     /* Dashed border to indicate no tag selected */
 }
 
 /* Tag Display Styles */
 #tagDisplay {
-    padding-top: 74px;
+    padding-top: 85px;
     width: 20px;
     height: 30px;
     border-radius: 11%;
     margin-bottom: 20px;
-    border: 3px solid rgb(0, 0, 0);
 }
 
 /* List Container Styles */
 #listContainer {
+    display: sticky;
     margin-top: 20px;
+    background-color: #8c819171;
+    padding: 8px;
+    border-radius: 3%;
+    height: 477px;
+    /* Set a fixed height */
+    overflow-y: scroll;
+    /* Enable vertical scrolling */
+}
+
+/* Hide scrollbar for WebKit browsers */
+#listContainer::-webkit-scrollbar {
+    display: none;
+    /* Hides the scrollbar */
+}
+
+/* Hide scrollbar for Firefox */
+#listContainer {
+    scrollbar-width: none;
+    /* Hides the scrollbar */
+}
+
+/* Hide scrollbar for IE and old Edge */
+#listContainer {
+    -ms-overflow-style: none;
+    /* Hides the scrollbar */
 }
 
 /* Card Styles */
 .card {
-    background-color: #2c2c2c;
+    background-color: #0f0d18bd;
     border-radius: 8px;
     margin: 10px 0;
     padding: 15px;
     color: #e0e0e0;
-    border-left: 5px solid #ccc;
+    /* border-left: 5px solid #dbdbdb; */
     word-wrap: break-word;
     /* Ensure long words break and wrap */
     overflow-wrap: break-word;
@@ -182,7 +281,7 @@ button:disabled {
 }
 
 .btn-danger {
-    background-color: #d32f2f;
+    background-color: #8b04049a;
     border: none;
     padding: 5px 10px;
     color: #fff;
@@ -191,17 +290,18 @@ button:disabled {
 }
 
 .btn-danger:hover {
-    background-color: #b71c1c;
+    background-color: #8a0f0f;
 }
 
 /* Form Group Styles */
 .form-group {
+    padding-top: 20px;
     display: flex;
     align-items: flex-start;
     /* Align items to the start of the flex container */
     gap: 20px;
     /* Space between inputs and buttons */
-    margin-bottom: 20px;
+    margin-bottom: px;
     width: 100%;
     /* Space below the form group */
 }
@@ -213,28 +313,8 @@ button:disabled {
 
 #tagContainer {
     padding-left: 10px;
-    padding-top: 21px;
+    padding-top: 15px;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-gap: 5px;
-}
-
-input[type="title"] {
-    width: 100%;
-    /* Full width of the parent container */
-    max-width: 600px;
-    /* Adjust to fit within the form group */
-    margin-bottom: 10px;
-    /* Space between input fields */
-    border: #121212 3px solid;
-}
-
-input[type="text"] {
-    width: 100%;
-    /* Full width of the parent container */
-    max-width: 600px;
-    /* Adjust to fit within the form group */
-    margin-bottom: 10px;
-    /* Space between input fields */
-    border: #121212 3px solid;
 }
