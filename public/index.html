@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reminder App</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .tag-button {
+            padding: 10px;
+            margin: 5px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .tag-red {
+            background-color: rgb(236, 69, 69);
+        }
+
+        .tag-yellow {
+            background-color: rgb(235, 235, 84);
+        }
+
+        .tag-green {
+            background-color: rgb(81, 179, 81);
+        }
+
+        .tag-blue {
+            background-color: rgb(100, 100, 196);
+        }
+
+
+
+        .selected-tag {
+            width: 50px;
+            height: 50px;
+            border: 3px solid #000000;
+            margin-bottom: 10px;
+            background-color: rgb(43, 43, 43);
+        }
+
+        .selected-tag.red {
+            background-color: rgb(236, 69, 69);
+        }
+
+        .selected-tag.blue {
+            background-color: rgb(100, 100, 196);
+        }
+
+        .selected-tag.green {
+            background-color: rgb(81, 179, 81);
+        }
+
+        .selected-tag.yellow {
+            background-color: rgb(235, 235, 84);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="title">
+           <h1>Os Relembranços</h1>
+        </div>
+        <!-- Form to add reminders -->
+        <form id="addForm">
+            <div class="form-group">
+                <div id="tagDisplay" class="selected-tag no-tag"></div>
+                <div id="inputContainer">
+                    <input type="title" id="title" placeholder="Enter your Title" required>
+                    <input type="text" id="description" placeholder="Enter your Text" required>
+                </div>
+                <div id="tagContainer">
+                    <button type="button" class="tag-button tag-red" data-tag="red"></button>
+                    <button type="button" class="tag-button tag-yellow" data-tag="yellow"></button>
+                    <button type="button" class="tag-button tag-green" data-tag="green"></button>
+                    <button type="button" class="tag-button tag-blue" data-tag="blue"></button>
+                </div>
+            </div>
+            <button type="submit" id="add-reminder">Add Reminder</button>
+        </form>
+        <!-- List container to display reminders -->
+        <div id="listContainer"></div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+
+    <!-- Your app script -->
+    <script type="module" src="app.js"></script><script>
+        // Get all tag buttons
+        const tagButtons = document.querySelectorAll('.tag-button');
+        const tagDisplay = document.getElementById('tagDisplay');
+
+        // Add click event listeners to each tag button
+        tagButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                // Remove the 'selected' class from any previously selected tag button
+                tagButtons.forEach(btn => btn.classList.remove('selected'));
+
+                // Add the 'selected' class to the clicked button
+                this.classList.add('selected');
+
+                // Change the tag display color based on selected tag
+                const selectedTag = this.dataset.tag;
+                tagDisplay.className = `selected-tag ${selectedTag}`; // Update the tag display with the selected color
+            });
+        });
+    </script>
+
+</body>
+
+</html>

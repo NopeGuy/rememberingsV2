@@ -1,2 +1,4 @@
-# rememberingsV2
-Tried again to make it work
+# TheList
+ Just an app that lists
+
+ *now with server side*
