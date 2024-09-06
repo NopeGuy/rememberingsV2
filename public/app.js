@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-import { getFirestore, collection, doc, addDoc, deleteDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+import { getFirestore, collection, doc, addDoc, deleteDoc, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
 const firebaseConfig = {
 };
@@ -89,7 +89,7 @@ const showData = (thelist) => {
     });
 };
 
-// Get Collection Data, sort by date, and show it
+// Set up real-time data listener
 const fetchAndDisplayData = () => {
     let q = query(colRef);
 
@@ -98,25 +98,27 @@ const fetchAndDisplayData = () => {
         q = query(q, where("tag", "==", selectedTag));
     }
 
-    getDocs(q)
-        .then((snapshot) => {
-            let thelist = [];
-            snapshot.docs.forEach((doc) => {
-                thelist.push({ ...doc.data(), id: doc.id });
-            });
+    // Clear previous snapshot listener before adding a new one
+    if (window.snapshotUnsubscribe) {
+        window.snapshotUnsubscribe();
+    }
 
-            // Sort the list by date
-            thelist.sort((a, b) => {
-                const dateA = new Date(a.date);
-                const dateB = new Date(b.date);
-                return dateB - dateA; // Sort descending
-            });
-
-            showData(thelist); // Call the showData function to display it
-        })
-        .catch(err => {
-            console.log(err);
+    // Set up a real-time listener
+    window.snapshotUnsubscribe = onSnapshot(q, (snapshot) => {
+        let thelist = [];
+        snapshot.docs.forEach((doc) => {
+            thelist.push({ ...doc.data(), id: doc.id });
         });
+
+        // Sort the list by date
+        thelist.sort((a, b) => {
+            const dateA = new Date(a.date);
+            const dateB = new Date(b.date);
+            return dateB - dateA; // Sort descending
+        });
+
+        showData(thelist); // Call the showData function to display it
+    });
 };
 
 // Event listener for form submission (add new reminder)
@@ -144,7 +146,6 @@ form.addEventListener("submit", (e) => {
             selectedTag = ''; // Reset selected tag
             tagButtons.forEach(btn => btn.classList.remove('selected')); // Clear button selection
             updateTagDisplay(''); // Reset tag display
-            fetchAndDisplayData(); // Fetch and display data after adding
         })
         .catch((err) => {
             console.log(err);
@@ -156,8 +157,7 @@ const deleteDocument = async (id) => {
     try {
         await deleteDoc(doc(db, "thelist", id));
         console.log("Document successfully deleted");
-        // Refresh the data list
-        fetchAndDisplayData();
+        // No need to call fetchAndDisplayData here because onSnapshot will handle updates
     } catch (err) {
         console.log(err);
     }
@@ -178,4 +178,30 @@ fetchAndDisplayData();
 
 particlesJS.load('particles-js', 'particles.json', function () {
     console.log('callback - particles.js config loaded');
+});
+
+// Change border color based on selected tag
+document.querySelectorAll('.tag-button').forEach(button => {
+    button.addEventListener('click', function () {
+        const listContainer = document.getElementById('listContainer');
+
+        // print current tag
+        console.log(selectedTag);
+
+        // Remove previous border color class
+        listContainer.classList.remove('list-border-red', 'list-border-blue', 'list-border-green', 'list-border-yellow', 'list-border-default');
+
+        // Add the new border color class based on the selected tag
+        if (selectedTag === 'red') {
+            listContainer.classList.add('list-border-red');
+        } else if (selectedTag === 'blue') {
+            listContainer.classList.add('list-border-blue');
+        } else if (selectedTag === 'green') {
+            listContainer.classList.add('list-border-green');
+        } else if (selectedTag === 'yellow') {
+            listContainer.classList.add('list-border-yellow');
+        } else if (selectedTag === '') {
+            listContainer.classList.add('list-border-default');
+        }
+    });
 });

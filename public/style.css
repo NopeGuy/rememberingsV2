@@ -227,6 +227,24 @@ button:disabled {
     /* Enable vertical scrolling */
 }
 
+/* Define border-top colors for each tag */
+.list-border-red {
+    border-top: 7px solid rgb(236, 69, 69);
+}
+
+.list-border-yellow {
+    border-top: 7px solid rgb(235, 235, 84);
+}
+
+.list-border-green {
+    border-top: 7px solid rgb(81, 179, 81);
+}
+
+.list-border-blue {
+    border-top: 7px solid rgb(100, 100, 196);
+}
+
+
 /* Hide scrollbar for WebKit browsers */
 #listContainer::-webkit-scrollbar {
     display: none;
@@ -242,7 +260,6 @@ button:disabled {
 /* Hide scrollbar for IE and old Edge */
 #listContainer {
     -ms-overflow-style: none;
-    /* Hides the scrollbar */
 }
 
 /* Card Styles */
@@ -278,6 +295,7 @@ button:disabled {
     /* Ensure text wraps properly */
     word-wrap: break-word;
     overflow-wrap: break-word;
+    white-space: pre-wrap;
 }
 
 .btn-danger {
